@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>myVocabulary Trainer</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page">
+    <header class="page-header">
+      <div class="header-bar">
+        <div class="header-text">
+          <h1>myVocabulary Trainer</h1>
+          <p>Upload your personal vocabulary list and challenge yourself to recall the target wording.</p>
+        </div>
+        <button type="button" id="imprintToggle" class="imprint-toggle" aria-expanded="false" aria-controls="imprintPanel">
+          Show imprint
+        </button>
+      </div>
+      <ul class="guidelines">
+        <li>The file must be named <code>vokabeln.txt</code>.</li>
+        <li>Each line must separate the source word and the target word with a semicolon, e.g. <code>source;target</code>.</li>
+        <li>The list can contain at most 50 valid entries.</li>
+      </ul>
+    </header>
+
+    <main class="page-content">
+      <section class="card upload-card">
+        <h2>Upload Your File</h2>
+        <p class="section-info">Select <strong>vokabeln.txt</strong> &mdash; every line must contain one source word and its matching target word separated by a semicolon.</p>
+
+        <label for="fileInput" class="upload-area" id="uploadArea">
+          <div class="upload-icon" aria-hidden="true">&uarr;</div>
+          <div class="upload-text">
+            <span class="primary">Choose file</span>
+            <span class="secondary">or drag & drop it here</span>
+          </div>
+          <input type="file" id="fileInput" accept=".txt">
+        </label>
+
+        <p class="hint">Uploading again will replace the previously loaded file.</p>
+        <div class="feedback" id="uploadMessage" role="status" aria-live="polite"></div>
+      </section>
+
+      <section class="card trainer-card hidden" id="trainerSection">
+        <div class="card-header">
+          <h2>Practice Session</h2>
+          <p>Fill in the target wording for every source word.</p>
+        </div>
+
+        <div class="toolbar">
+          <button type="button" id="checkBtn" disabled>Check answers</button>
+          <button type="button" id="clearBtn" disabled>Clear all</button>
+        </div>
+
+        <div class="list-header">
+          <span>Source</span>
+          <span>Target</span>
+        </div>
+
+        <div class="vocab-list" id="vocabList" aria-live="polite"></div>
+        <div class="feedback" id="resultMessage" role="status" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <footer class="page-footer" id="imprintPanel" hidden>
+      <section class="imprint" aria-labelledby="imprint-title">
+        <h2 id="imprint-title">Impressum</h2>
+        <p class="imprint-line">Katja Bürger</p>
+        <p class="imprint-line">Lahnstrasse 13</p>
+        <p class="imprint-line">56567 Neuwied</p>
+        <p class="imprint-line">Deutschland</p>
+        <p class="imprint-line">
+          E-Mail:
+          <a href="mailto:ckatja107@gmail.com">ckatja107@gmail.com</a>
+        </p>
+      </section>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

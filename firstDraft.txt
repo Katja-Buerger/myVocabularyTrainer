@@ -1,0 +1,19 @@
+Erstelle eine Anwendung, die es ermöglicht, eine Textdatei namens vokabeln.txt hochzuladen. Diese Datei enthält Key-Value-Paare, wobei das deutsche Wort (Key) und das englische Wort (Value) durch ein Semikolon getrennt sind.
+
+
+
+Funktionen:
+
+Datei-Upload: Die Datei muss genau vokabeln.txt heißen. Jede andere Datei führt zu einer Fehlermeldung. Beim erneuten Hochladen wird die bestehende Datei überschrieben.
+
+Darstellung: Die Anwendung zeigt alle Key-Value-Paare in einer scrollbaren Ansicht. Links ist der Key (das deutsche Wort) sichtbar und nicht bearbeitbar, rechts befindet sich ein Eingabefeld für die Eingabe des englischen Worts.
+
+Vergleich: Nach Eingabe aller Werte kann man einen Button klicken, der die Eingaben mit den tatsächlichen Werten vergleicht und die Fehler anzeigt.
+
+Zusätzliche Funktionen:
+
+Clear All: Ein Button, um alle Eingaben zurückzusetzen und die Felder zu leeren.
+
+Neues Hochladen: Ermögliche das Hochladen neuer Dateien, die die alte Datei ersetzen.
+
+Lokalhost: Die Anwendung soll lokal auf dem Rechner laufen.
