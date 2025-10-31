@@ -1,57 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>myVocabulary Trainer</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>myVocabulary Trainer</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
   <div class="page">
     <header class="page-header">
       <div class="header-bar">
         <div class="header-text">
           <h1>myVocabulary Trainer</h1>
-          <p>Upload your personal vocabulary list and challenge yourself to recall the target wording.</p>
+          <p>Drop in your vocab sheet, quiz yourself on the target words, and see instantly how you did.</p>
         </div>
         <button type="button" id="imprintToggle" class="imprint-toggle" aria-expanded="false" aria-controls="imprintPanel">
           Show imprint
         </button>
       </div>
-      <ul class="guidelines">
-        <li>The file must be named <code>vokabeln.txt</code>.</li>
-        <li>Each line must separate the source word and the target word with a semicolon, e.g. <code>source;target</code>.</li>
-        <li>The list can contain at most 50 valid entries.</li>
-      </ul>
     </header>
 
     <main class="page-content">
       <section class="card upload-card">
-        <h2>Upload Your File</h2>
-        <p class="section-info">Select <strong>vokabeln.txt</strong> &mdash; every line must contain one source word and its matching target word separated by a semicolon.</p>
-
-        <label for="fileInput" class="upload-area" id="uploadArea">
-          <div class="upload-icon" aria-hidden="true">&uarr;</div>
-          <div class="upload-text">
-            <span class="primary">Choose file</span>
-            <span class="secondary">or drag & drop it here</span>
+        <div class="upload-body">
+          <div class="upload-description">
+            <h2>Upload Your List</h2>
+            <p class="section-info">
+              Drop any Excel workbook named like <strong>voc*.xlsx</strong>. The first column is the prompt, the second the answer.
+              We keep up to 20 pairs so your session stays sharp.
+            </p>
+            <ul class="guidelines">
+              <li>Ensure the filename begins with <code>voc</code> and ends with <code>.xlsx</code>.</li>
+              <li>Use the first two columns for source → target. Mental clutter stays out after row 20.</li>
+              <li>Re-upload any time to replace the current set instantly.</li>
+            </ul>
           </div>
-          <input type="file" id="fileInput" accept=".txt">
-        </label>
 
-        <p class="hint">Uploading again will replace the previously loaded file.</p>
-        <div class="feedback" id="uploadMessage" role="status" aria-live="polite"></div>
+          <div class="upload-controls">
+            <label for="fileInput" class="upload-area" id="uploadArea">
+              <div class="upload-icon" aria-hidden="true">&uarr;</div>
+              <div class="upload-text">
+                <span class="primary">Choose file</span>
+                <span class="secondary">or drag & drop it here</span>
+              </div>
+              <input type="file" id="fileInput" accept=".xlsx">
+            </label>
+
+            <p class="hint">Need a reset? Uploading again swaps the list instantly.</p>
+            <div class="feedback" id="uploadMessage" role="status" aria-live="polite"></div>
+          </div>
+        </div>
       </section>
 
       <section class="card trainer-card hidden" id="trainerSection">
         <div class="card-header">
-          <h2>Practice Session</h2>
-          <p>Fill in the target wording for every source word.</p>
+          <h2>Quiz Mode</h2>
+          <p>Type the matching target word for each source word, then smash “Check answers” to see your score.</p>
         </div>
 
         <div class="toolbar">
           <button type="button" id="checkBtn" disabled>Check answers</button>
-          <button type="button" id="clearBtn" disabled>Clear all</button>
+          <button type="button" id="clearBtn" disabled>Reset answers</button>
         </div>
 
         <div class="list-header">
@@ -79,6 +88,6 @@
     </footer>
   </div>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=2" defer></script>
 </body>
 </html>
