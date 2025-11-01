@@ -11,40 +11,15 @@ const imprintPanel = document.getElementById("imprintPanel");
 
 window.__debugLogs = [];
 function debugLog(...args) {
-  const message = args
-    .map((arg) => {
-      if (typeof arg === "object") {
-        try {
-          return JSON.stringify(arg);
-        } catch (error) {
-          return "[object]";
-        }
-      }
-      return String(arg);
-    })
-    .join(" ");
-
-  window.__debugLogs.push(message);
-  try {
-    // eslint-disable-next-line no-console
-    console.log("[debug]", message);
-  } catch (error) {
-    // ignore console unavailability
+  window.__debugLogs.push(args);
+  if (typeof console !== "undefined" && typeof console.log === "function") {
+    try {
+      // eslint-disable-next-line no-console
+      console.log("[debug]", ...args);
+    } catch (error) {
+      // ignore console issues
+    }
   }
-
-  let logContainer = document.getElementById("debugTrace");
-  if (!logContainer) {
-    logContainer = document.createElement("div");
-    logContainer.id = "debugTrace";
-    logContainer.style.fontSize = "0.8rem";
-    logContainer.style.color = "#374151";
-    logContainer.style.marginTop = "8px";
-    logContainer.style.lineHeight = "1.3";
-    uploadMessage.appendChild(logContainer);
-  }
-  const entry = document.createElement("div");
-  entry.textContent = message;
-  logContainer.appendChild(entry);
 }
 
 window.addEventListener("error", (event) => {
@@ -166,9 +141,15 @@ function renderVocabulary(entries) {
     const row = document.createElement("div");
     row.className = "vocab-item";
 
+    const wordCell = document.createElement("div");
+    wordCell.className = "vocab-cell word-cell";
     const germanLabel = document.createElement("span");
+    germanLabel.className = "word";
     germanLabel.textContent = entry.german;
+    wordCell.appendChild(germanLabel);
 
+    const answerCell = document.createElement("div");
+    answerCell.className = "vocab-cell answer-cell";
     const englishInput = document.createElement("input");
     englishInput.type = "text";
     englishInput.name = `vocab-${index}`;
@@ -176,15 +157,36 @@ function renderVocabulary(entries) {
     englishInput.autocomplete = "off";
     englishInput.dataset.answer = entry.english;
     englishInput.dataset.german = entry.german;
+    answerCell.appendChild(englishInput);
+
+    const solutionCell = document.createElement("div");
+    solutionCell.className = "vocab-cell solution-cell";
+    const solutionDisplay = document.createElement("span");
+    solutionDisplay.className = "solution";
+    solutionDisplay.textContent = "—";
+    solutionDisplay.dataset.answer = entry.english;
+    solutionCell.appendChild(solutionDisplay);
 
     englishInput.addEventListener("input", () => {
       englishInput.classList.remove("correct", "incorrect");
       resultMessage.classList.remove("visible", "success", "error");
       resultMessage.textContent = "";
+      const solutionElement = englishInput
+        .closest(".vocab-item")
+        .querySelector(".solution");
+      if (solutionElement) {
+        solutionElement.textContent = "—";
+        solutionElement.classList.remove(
+          "solution-correct",
+          "solution-incorrect",
+          "revealed"
+        );
+      }
     });
 
-    row.appendChild(germanLabel);
-    row.appendChild(englishInput);
+    row.appendChild(wordCell);
+    row.appendChild(answerCell);
+    row.appendChild(solutionCell);
     vocabList.appendChild(row);
   });
 }
@@ -198,16 +200,24 @@ function compareAnswers() {
   }
 
   let correctCount = 0;
-  const incorrectWords = [];
 
   inputs.forEach((input) => {
     const userAnswer = input.value.trim();
     const solution = input.dataset.answer.trim();
+    const row = input.closest(".vocab-item");
+    const solutionDisplay = row ? row.querySelector(".solution") : null;
+    if (solutionDisplay) {
+      solutionDisplay.textContent = solution;
+      solutionDisplay.classList.add("revealed");
+    }
 
     if (!userAnswer) {
       input.classList.remove("correct");
       input.classList.add("incorrect");
-      incorrectWords.push(`${input.dataset.german} (missing target word)`);
+      if (solutionDisplay) {
+        solutionDisplay.classList.remove("solution-correct");
+        solutionDisplay.classList.add("solution-incorrect");
+      }
       return;
     }
 
@@ -215,10 +225,17 @@ function compareAnswers() {
       input.classList.remove("incorrect");
       input.classList.add("correct");
       correctCount += 1;
+      if (solutionDisplay) {
+        solutionDisplay.classList.remove("solution-incorrect");
+        solutionDisplay.classList.add("solution-correct");
+      }
     } else {
       input.classList.remove("correct");
       input.classList.add("incorrect");
-      incorrectWords.push(`${input.dataset.german} -> ${solution}`);
+      if (solutionDisplay) {
+        solutionDisplay.classList.remove("solution-correct");
+        solutionDisplay.classList.add("solution-incorrect");
+      }
     }
   });
 
@@ -228,21 +245,8 @@ function compareAnswers() {
   showFeedback(
     resultMessage,
     allCorrect ? "success" : "error",
-    allCorrect
-      ? "Great job - every target word is correct!"
-      : buildErrorMessage(correctCount, total, incorrectWords)
+    `Score: ${correctCount} / ${total}`
   );
-}
-
-function buildErrorMessage(correctCount, total, incorrectWords) {
-  const mistakes =
-    incorrectWords.length > 0
-      ? `<br><span class="details">Needs review: ${incorrectWords.join(
-          ", "
-        )}</span>`
-      : "";
-
-  return `You got ${correctCount} of ${total} answers right.${mistakes}`;
 }
 
 function clearAnswers(showConfirmation = false) {
@@ -251,6 +255,11 @@ function clearAnswers(showConfirmation = false) {
   inputs.forEach((input) => {
     input.value = "";
     input.classList.remove("correct", "incorrect");
+    const solutionDisplay = input.closest(".vocab-item")?.querySelector(".solution");
+    if (solutionDisplay) {
+      solutionDisplay.textContent = "—";
+      solutionDisplay.classList.remove("solution-correct", "solution-incorrect", "revealed");
+    }
   });
 
   if (showConfirmation) {
@@ -720,13 +729,13 @@ function handleParsedEntries(entries, { skipped, source }) {
 
   vocabData = entries.slice(0, MAX_ENTRIES);
   renderVocabulary(vocabData);
-    showFeedback(
-      uploadMessage,
-      "success",
-      skipped
-        ? `Loaded ${vocabData.length} entries. Skipped ${skipped} row(s) that were empty, incomplete, or beyond the 20-row limit.`
-        : `Loaded ${vocabData.length} entries. Time to practice!`
-    );
+  showFeedback(
+    uploadMessage,
+    "success",
+    skipped
+      ? `Loaded ${vocabData.length} entries. Skipped ${skipped} row(s) that were empty, incomplete, or beyond the ${MAX_ENTRIES}-row limit.`
+      : `Loaded ${vocabData.length} entries. Time to practice!`
+  );
   trainerSection.classList.remove("hidden");
   toggleTrainerButtons(true);
   clearAnswers();

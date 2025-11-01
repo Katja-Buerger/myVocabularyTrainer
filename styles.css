@@ -298,7 +298,7 @@ body {
 
 .list-header {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1.1fr;
   gap: 16px;
   font-size: 0.95rem;
   font-weight: 600;
@@ -316,10 +316,10 @@ body {
 
 .vocab-item {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1.1fr;
   gap: 16px;
   padding: 16px 18px;
-  align-items: center;
+  align-items: stretch;
   border-bottom: 1px solid rgba(67, 101, 246, 0.1);
 }
 
@@ -327,9 +327,62 @@ body {
   border-bottom: none;
 }
 
-.vocab-item span {
+.vocab-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.vocab-cell::before {
+  display: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+}
+
+.word-cell .word {
   font-weight: 600;
   color: var(--text-primary);
+}
+
+.vocab-item .solution {
+  font-weight: 500;
+  color: var(--text-secondary);
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: rgba(67, 101, 246, 0.08);
+  transition: background 0.2s ease, color 0.2s ease;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+}
+
+.vocab-item .solution.revealed {
+  background: rgba(67, 101, 246, 0.12);
+}
+
+.vocab-item .solution.solution-correct {
+  background: rgba(45, 154, 93, 0.15);
+  color: #1c663d;
+}
+
+.vocab-item .solution.solution-incorrect {
+  background: rgba(214, 69, 80, 0.18);
+  color: #822a32;
+}
+
+.word-cell::before {
+  content: "Word to translate";
+}
+
+.answer-cell::before {
+  content: "Your Answer";
+}
+
+.solution-cell::before {
+  content: "Right Answer";
 }
 
 .vocab-item input {
@@ -478,17 +531,21 @@ code {
     gap: 12px;
   }
 
-  .list-header,
-  .vocab-item {
-    grid-template-columns: 1fr;
-  }
-
-  .list-header span:last-child {
+  .list-header {
     display: none;
   }
 
-  .vocab-item span {
-    margin-bottom: 4px;
+  .vocab-item {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .vocab-cell {
+    gap: 6px;
+  }
+
+  .vocab-cell::before {
+    display: block;
   }
 }
 
