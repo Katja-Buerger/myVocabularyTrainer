@@ -46,35 +46,12 @@ body {
 
 .header-bar {
   display: flex;
-  justify-content: space-between;
-  align-items: start;
-  gap: 20px;
-  flex-wrap: wrap;
+  justify-content: center;
+  text-align: center;
 }
 
 .header-text {
-  flex: 1 1 320px;
-}
-
-.imprint-toggle {
-  appearance: none;
-  border: 1px solid rgba(28, 42, 68, 0.16);
-  background: var(--card-bg);
-  color: var(--accent);
-  font-weight: 600;
-  padding: 10px 16px;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-  box-shadow: 0 10px 22px rgba(67, 101, 246, 0.12);
-}
-
-.imprint-toggle:hover,
-.imprint-toggle:focus-visible {
-  border-color: var(--accent);
-  transform: translateY(-1px);
-  box-shadow: 0 14px 28px rgba(67, 101, 246, 0.22);
-  outline: none;
+  max-width: 520px;
 }
 
 .page-header h1 {
@@ -333,7 +310,7 @@ body {
   gap: 8px;
 }
 
-.vocab-cell::before {
+.cell-label {
   display: none;
   font-size: 0.8rem;
   font-weight: 600;
@@ -371,18 +348,6 @@ body {
 .vocab-item .solution.solution-incorrect {
   background: rgba(214, 69, 80, 0.18);
   color: #822a32;
-}
-
-.word-cell::before {
-  content: "Word to translate";
-}
-
-.answer-cell::before {
-  content: "Your Answer";
-}
-
-.solution-cell::before {
-  content: "Right Answer";
 }
 
 .vocab-item input {
@@ -445,49 +410,6 @@ body {
   font-weight: 500;
 }
 
-.page-footer {
-  text-align: center;
-  margin-top: 50px;
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-}
-
-.page-footer[hidden] {
-  display: none;
-}
-
-.page-footer {
-  display: flex;
-  justify-content: center;
-  padding-top: 24px;
-}
-
-.imprint {
-  display: inline-block;
-  text-align: left;
-  padding: 0 12px;
-}
-
-.imprint h2 {
-  margin: 0 0 10px;
-  font-size: 1.1rem;
-  color: var(--text-primary);
-  text-align: center;
-}
-
-.imprint-line {
-  margin: 4px 0;
-}
-
-.imprint a {
-  color: var(--accent);
-  text-decoration: none;
-}
-
-.imprint a:hover,
-.imprint a:focus {
-  text-decoration: underline;
-}
 
 code {
   background: rgba(28, 42, 68, 0.08);
@@ -510,6 +432,14 @@ code {
   .upload-controls {
     padding: 16px;
   }
+
+  .header-bar {
+    padding: 0 12px;
+  }
+
+  .header-text {
+    max-width: none;
+  }
 }
 
 @media (max-width: 720px) {
@@ -520,6 +450,10 @@ code {
 
   .card {
     padding: 24px;
+  }
+
+  .page-header {
+    margin-bottom: 18px;
   }
 
   .upload-body {
@@ -544,7 +478,7 @@ code {
     gap: 6px;
   }
 
-  .vocab-cell::before {
+  .cell-label {
     display: block;
   }
 }
@@ -561,16 +495,6 @@ code {
 
   .page-header {
     margin-bottom: 28px;
-  }
-
-  .header-bar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .imprint-toggle {
-    align-self: flex-end;
-    padding: 10px 14px;
   }
 
   .page-header h1 {

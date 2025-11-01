@@ -6,8 +6,6 @@ const vocabList = document.getElementById("vocabList");
 const checkBtn = document.getElementById("checkBtn");
 const clearBtn = document.getElementById("clearBtn");
 const resultMessage = document.getElementById("resultMessage");
-const imprintToggle = document.getElementById("imprintToggle");
-const imprintPanel = document.getElementById("imprintPanel");
 
 window.__debugLogs = [];
 function debugLog(...args) {
@@ -90,7 +88,6 @@ uploadArea.addEventListener("drop", (event) => {
 
 checkBtn.addEventListener("click", () => compareAnswers());
 clearBtn.addEventListener("click", () => clearAnswers(true));
-imprintToggle.addEventListener("click", () => toggleImprint());
 
 function processFile(file) {
   debugLog("processFile:start", file && file.name);
@@ -143,13 +140,19 @@ function renderVocabulary(entries) {
 
     const wordCell = document.createElement("div");
     wordCell.className = "vocab-cell word-cell";
+    const wordLabel = document.createElement("span");
+    wordLabel.className = "cell-label";
+    wordLabel.textContent = "Word to translate";
     const germanLabel = document.createElement("span");
     germanLabel.className = "word";
     germanLabel.textContent = entry.german;
-    wordCell.appendChild(germanLabel);
+    wordCell.append(wordLabel, germanLabel);
 
     const answerCell = document.createElement("div");
     answerCell.className = "vocab-cell answer-cell";
+    const answerLabel = document.createElement("span");
+    answerLabel.className = "cell-label";
+    answerLabel.textContent = "Your Answer";
     const englishInput = document.createElement("input");
     englishInput.type = "text";
     englishInput.name = `vocab-${index}`;
@@ -157,15 +160,18 @@ function renderVocabulary(entries) {
     englishInput.autocomplete = "off";
     englishInput.dataset.answer = entry.english;
     englishInput.dataset.german = entry.german;
-    answerCell.appendChild(englishInput);
+    answerCell.append(answerLabel, englishInput);
 
     const solutionCell = document.createElement("div");
     solutionCell.className = "vocab-cell solution-cell";
+    const solutionLabel = document.createElement("span");
+    solutionLabel.className = "cell-label";
+    solutionLabel.textContent = "Right Answer";
     const solutionDisplay = document.createElement("span");
     solutionDisplay.className = "solution";
     solutionDisplay.textContent = "—";
     solutionDisplay.dataset.answer = entry.english;
-    solutionCell.appendChild(solutionDisplay);
+    solutionCell.append(solutionLabel, solutionDisplay);
 
     englishInput.addEventListener("input", () => {
       englishInput.classList.remove("correct", "incorrect");
@@ -749,20 +755,6 @@ uploadArea.addEventListener("keydown", (event) => {
     fileInput.click();
   }
 });
-
-function toggleImprint() {
-  const isHidden = imprintPanel.hasAttribute("hidden");
-  if (isHidden) {
-    imprintPanel.removeAttribute("hidden");
-    imprintToggle.setAttribute("aria-expanded", "true");
-    imprintToggle.textContent = "Hide imprint";
-    imprintPanel.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  } else {
-    imprintPanel.setAttribute("hidden", "");
-    imprintToggle.setAttribute("aria-expanded", "false");
-    imprintToggle.textContent = "Show imprint";
-  }
-}
 
 function getExtension(filename = "") {
   debugLog("getExtension", filename);
